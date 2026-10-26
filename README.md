@@ -23,7 +23,7 @@ Finder에서 `/Volumes/SND/Masmarulez/` 아래 폴더 우클릭 → 빠른 동�
 
 ## 3. 받는 Mac 설정 (각 팀원 1회)
 
-단축어(Shortcuts) 앱에서 새 단축어를 만들고 이름을 정확히 **비주얼팀 NAS 열기**로 지정합니다.
+단축어(Shortcuts) 앱에서 새 단축어를 만들고 이름을 정확히 **VisualTeamNASOpen**로 지정합니다.
 
 `셸 스크립트 실행 (Run Shell Script)` 동작을 추가하고, 셸 `/bin/bash`, 입력: **단축어 입력 (Shortcut Input)**, 전달: **표준 입력(stdin)**으로 설정합니다.
 
