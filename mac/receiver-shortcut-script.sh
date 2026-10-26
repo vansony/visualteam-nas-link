@@ -7,7 +7,7 @@ case "$TARGET" in
   *) /usr/bin/osascript -e 'display alert "허용되지 않은 NAS 경로입니다"'; exit 1 ;;
 esac
 case "$TARGET" in
-  *"/../"*|*"/./"*|*$'\n'*|*$'\r'*|*$'\0'*) exit 1 ;;
+  *"/../"*|*"/./"*|*$'\n'*|*$'\r'*) exit 1 ;;
 esac
 REL="${TARGET#"$PREFIX"}"
 for ROOT in "/Volumes/SND/Masmarulez" "/Volumes/Masmarulez"; do
