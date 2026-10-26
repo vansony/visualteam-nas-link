@@ -1,42 +1,23 @@
-# 비주얼팀 NAS 링크 공유 (macOS + Flow)
+# 비주얼팀 NAS 링크 공유 — v4
 
-Finder 폴더를 선택해 링크 복사 → Flow에서 HTTPS 링크 전송 → 동료가 링크 클릭 → 웹페이지에서 **Finder에서 폴더 열기** 클릭. 브라우저에서 외부 앱 실행 허용이 필요할 수 있습니다.
+Finder에서 NAS 폴더 우클릭 → 서비스 → NAS 링크 복사 → Flow에 HTTPS 링크 전송 → 받은 사람이 **VisualTeamNASOpen** 단축어로 Finder 폴더 열기.
 
-## 1. GitHub Pages 설정 (관리자 1회)
-Repository → Settings → Pages → Build and deployment → Deploy from a branch → main / (root) → Save.
+두 가지 연결 경로를 지원합니다.
+- `/Volumes/SND/Masmarulez/...`
+- `/Volumes/Masmarulez/...`
 
-배포 예정 주소: https://vansony.github.io/visualteam-nas-link/
+보내는 쪽은 연결 경로를 공통 형식 `/Volumes/SND/Masmarulez/...`으로 변환합니다. 받는 쪽은 자신의 맥에서 실제 존재하는 위치를 찾습니다.
 
-> 공개 URL에 폴더 경로가 **Base64 URL 인코딩**되어 들어갑니다. 이는 암호화가 아니며 링크를 받은 사람 또는 브라우저/로그 제공자가 경로를 알아낼 수 있습니다. 회사의 외부 공유 및 호스팅 정책에 맞는지 먼저 확인하세요. NAS에 대한 접근 권한은 추가되지 않습니다.
+## 설치
 
-## 2. 보내는 Mac 설정 (1회)
+팀원 배포 패키지 `VisualTeam_NAS_최종배포_v4.zip`에 포함된 **NAS 링크 복사.workflow**를 설치합니다. 기존 v3 워크플로우는 교체하세요.
 
-저장소의 `mac/` 파일들을 같은 폴더에 다운로드한 뒤 터미널에서 `bash mac/install-sender.command`를 실행합니다.
+단축어 이름은 정확히 `VisualTeamNASOpen`으로 사용합니다. 단축어 → 설정 → 고급 → **스크립트 실행 허용**을 확인합니다.
 
-Automator → 새로운 문서 → 빠른 동작 → 현재 수신 항목: **폴더**, 적용 대상: **Finder** → '셸 스크립트 실행' 추가 → 셸: `/bin/bash`, 입력 전달: **인수로** → 아래 코드 입력 후 `NAS 링크 복사`로 저장합니다.
+중요: 배포 ZIP의 `VisualTeamNASOpen.shortcut` 파일은 서명된 기존 v3 원본 그대로입니다. .shortcut 파일은 외부에서 코드만 고쳐 서명을 유지할 수 없기 때문에, `/Volumes/Masmarulez/` 사용자와 전체 v4 통일을 원하는 팀원은 단축어의 **셸 스크립트 실행** 코드를 `VisualTeamNASOpen_v4_한줄코드.txt` 내용으로 교체해야 합니다. 셸은 bash, 입력은 단축어 입력, 입력 전달은 stdin입니다. 실제 성공한 맥에서 수정본을 내보내면 이 수동 단계를 없앨 수 있습니다.
 
-```bash
-"$HOME/.local/share/visualteam-nas-link/nas-link-copy.sh" "$@"
-```
+웹페이지: https://vansony.github.io/visualteam-nas-link/
 
-Finder에서 `/Volumes/SND/Masmarulez/` 아래 폴더 우클릭 → 빠른 동작 → NAS 링크 복사 → Flow에 붙여넣기.
+## 보안
 
-## 3. 받는 Mac 설정 (각 팀원 1회)
-
-단축어(Shortcuts) 앱에서 새 단축어를 만들고 이름을 정확히 **VisualTeamNASOpen**로 지정합니다.
-
-`셸 스크립트 실행 (Run Shell Script)` 동작을 추가하고, 셸 `/bin/bash`, 입력: **단축어 입력 (Shortcut Input)**, 전달: **표준 입력(stdin)**으로 설정합니다.
-
-`mac/receiver-shortcut-script.sh` 파일의 내용을 스크립트 동작에 복사합니다.
-
-> 단축어 설정이나 macOS 버전에 따라 입력/셸 실행 구성이 달라질 수 있습니다. 단축어가 텍스트를 정상적으로 받고 실행할 권한이 있는지 사무실 Mac에서 테스트하세요.
-
-## 지원 경로
-- `/Volumes/SND/Masmarulez/...` (동료의 Mac에도 같은 마운트 경로가 있어야 함)
-- NAS의 Bonjour SMB 이름은 `snd._smb._tcp.local`이며 링크 실행은 마운트된 `/Volumes/SND` 폴더를 기준으로 합니다.
-- NAS가 `SND-1` 등 다른 이름으로 연결된 Mac에서는 수정이 필요합니다.
-
-## 실제 제한
-- Flow가 `file://` 및 `smb://`를 일반 텍스트로 표시하므로 HTTPS 페이지를 거칩니다.
-- 링크 클릭만으로 바로 Finder를 연다고 보장할 수 없습니다. 페이지 버튼과 브라우저 허용 과정이 필요할 수 있습니다.
-- GitHub Pages 배포와 실제 회사 Mac의 실행 테스트는 별도로 확인해야 합니다.
+HTTPS 링크의 폴더 경로는 Base64URL로 인코딩될 뿐 암호화되지 않습니다. 파일 자체는 업로드하지 않지만, 폴더 구조를 외부에 드러낼 수 있으니 사내 정책에 맞게 공유하세요.
